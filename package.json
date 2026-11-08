@@ -1,0 +1,46 @@
+{
+  "name": "church-radar",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Live world radar of churches, coloured by whether they are meeting right now or by denomination.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "checkins:helper": "wrangler dev --local -c freebuff-realtime/wrangler.jsonc --inspector-port 9230",
+    "checkins:worker": "wrangler dev --local -c worker/wrangler.jsonc --inspector-port 9229",
+    "verify:checkins": "node scripts/verify-checkins.mjs",
+    "verify:ui": "node scripts/verify-ui.mjs",
+    "seed": "python3 scripts/fetch_seed.py",
+    "icons": "python3 scripts/make_icons.py",
+    "android:add": "npm run build && npx cap add android",
+    "android:sync": "npm run build && npx cap sync android",
+    "android:open": "npx cap open android",
+    "android:apk": "npm run android:sync && cd android && ./gradlew assembleDebug"
+
+  },
+  "dependencies": {
+    "maplibre-gl": "^5.9.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tz-lookup": "^6.1.25"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "@vitejs/plugin-react": "^5.0.4",
+    "playwright": "1.58.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4",
+    "wrangler": "4.148.0",
+    "ws": "8.18.3"
+  }
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vite/
+android/
+ios/
+*.local
+.DS_Store
+
+.verify/
+artifacts/
