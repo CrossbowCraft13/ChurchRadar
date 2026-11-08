@@ -21,7 +21,7 @@ Android-first: the same build is an installable Android app (Capacitor shell in 
 | Where | How |
 | --- | --- |
 | **GitHub** | [Latest release](https://github.com/CrossbowCraft13/ChurchRadar/releases/latest) → download `ChurchRadar-1.0.0.apk`, open it on the phone, allow installing from unknown sources |
-| **Orion Store** | Search *Church Radar* in [Orion](https://orionstore.net), or add the catalogue entry in [`store/orion-entry.json`](store/orion-entry.json) |
+| **Orion Store** | Submitted from this repo; the catalogue entry is ready in [`store/orion-entry.json`](store/orion-entry.json). Once it is listed, search *Church Radar* in [Orion](https://orionstore.net) |
 
 Android 6.0 (API 23) or newer, about 5 MB, and an internet connection (churches, tiles and check-ins
 are live). It is not on Google Play. Every build is release-signed with the project keystore and ships
