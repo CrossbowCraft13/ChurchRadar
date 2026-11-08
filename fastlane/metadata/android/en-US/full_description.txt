@@ -1,0 +1,36 @@
+A live world map of churches, coloured by what is happening inside them right now.
+
+Every dot is a real church building, mapped from open data. Green means it is meeting now, blue means
+it already met earlier today, red means it is not meeting yet. Tap any dot for the church, its
+tradition, its local time and the next service.
+
+WHY IT IS DIFFERENT
+Most church finders are lists. Church Radar is a radar: one glance tells you what is happening in a
+city, a country or the whole world at this moment. The colours come from published service times and
+from typical hours per tradition when a church publishes none — the app always tells you which one it
+used, and shows a "?" when it is only an estimate.
+
+56,946 CHURCHES, EVERY CONTINENT
+Zoom out for the globe and the dots thin out so the world stays readable; zoom into a city and every
+church appears. Past street level the app scans OpenStreetMap live for the churches around you,
+including the small ones.
+
+COMMUNITY CHECK-INS, IN REAL TIME
+If you are at a service that is not on the schedule, tap "It's meeting now". Every open radar updates
+in under a tenth of a second — no reload, no account, no sign-in. Someone else can confirm, and the
+report expires on its own.
+
+MORE THAN ONE MAP
+Switch from status to denomination to see Catholic, Orthodox, Anglican, Protestant and Baptist
+churches at a glance, or filter to a single tradition.
+
+MADE TO BE RESPECTFUL
+No account, no ads, no tracking, no analytics, no third-party SDKs. Check-ins are one tap of trust and
+are presented as community reports, never as verified facts.
+
+OPEN DATA
+Church locations from Wikidata and OpenStreetMap, map tiles from OpenStreetMap contributors. Source
+code, data scripts and build instructions are on GitHub:
+https://github.com/CrossbowCraft13/ChurchRadar
+
+The app needs an internet connection: it loads live churches, map tiles and community check-ins.

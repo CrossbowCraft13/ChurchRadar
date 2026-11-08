@@ -1,0 +1,21 @@
+{
+  "id": "churchradar",
+  "name": "Church Radar",
+  "description": "A live world map of 56,946 churches coloured by what is happening inside them right now — green for meeting now, blue for already met today, red for not yet — with realtime community check-ins and a denomination view.",
+  "icon": "https://raw.githubusercontent.com/CrossbowCraft13/ChurchRadar/main/fastlane/metadata/android/en-US/images/icon.png",
+  "version": "1.0.0",
+  "latestVersion": "1.0.0",
+  "downloadUrl": "https://github.com/CrossbowCraft13/ChurchRadar/releases/latest",
+  "officialSite": "https://github.com/CrossbowCraft13/ChurchRadar",
+  "author": "CrossbowCraft13",
+  "platform": "Android",
+  "size": "5.3 MB",
+  "screenshots": [
+    "https://raw.githubusercontent.com/CrossbowCraft13/ChurchRadar/main/fastlane/metadata/android/en-US/images/phoneScreenshots/01-world-radar.png",
+    "https://raw.githubusercontent.com/CrossbowCraft13/ChurchRadar/main/fastlane/metadata/android/en-US/images/phoneScreenshots/02-church-sheet.png",
+    "https://raw.githubusercontent.com/CrossbowCraft13/ChurchRadar/main/fastlane/metadata/android/en-US/images/phoneScreenshots/03-europe.png",
+    "https://raw.githubusercontent.com/CrossbowCraft13/ChurchRadar/main/fastlane/metadata/android/en-US/images/phoneScreenshots/04-country.png",
+    "https://raw.githubusercontent.com/CrossbowCraft13/ChurchRadar/main/fastlane/metadata/android/en-US/images/phoneScreenshots/05-denominations.png"
+  ],
+  "releaseKeyword": "apk"
+}

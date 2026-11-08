@@ -13,8 +13,27 @@ Pan and zoom; when you are zoomed in far enough the radar scans OpenStreetMap fo
 view. Statuses re-evaluate every 15 seconds against each church's **own time zone**, and the scan
 refreshes every 5 minutes.
 
-Android-first: it is a standalone, installable PWA (offline shell, safe-area aware, touch sized) and
-ships with a Capacitor config so the same build can be wrapped as an Android app.
+Android-first: the same build is an installable Android app (Capacitor shell in `android/`, package
+`app.churchradar.mobile`) and a standalone PWA (offline shell, safe-area aware, touch sized).
+
+## Install
+
+| Where | How |
+| --- | --- |
+| **GitHub** | [Latest release](https://github.com/CrossbowCraft13/ChurchRadar/releases/latest) → download `ChurchRadar-1.0.0.apk`, open it on the phone, allow installing from unknown sources |
+| **Orion Store** | Search *Church Radar* in [Orion](https://orionstore.net), or add the catalogue entry in [`store/orion-entry.json`](store/orion-entry.json) |
+
+Android 6.0 (API 23) or newer, about 5 MB, and an internet connection (churches, tiles and check-ins
+are live). It is not on Google Play. Every build is release-signed with the project keystore and ships
+beside a `.sha256` file:
+
+```bash
+sha256sum -c ChurchRadar-1.0.0.apk.sha256
+```
+
+| World | A church meeting now | By denomination |
+| --- | --- | --- |
+| ![World radar](fastlane/metadata/android/en-US/images/phoneScreenshots/01-world-radar.png) | ![Church sheet](fastlane/metadata/android/en-US/images/phoneScreenshots/02-church-sheet.png) | ![Denominations](fastlane/metadata/android/en-US/images/phoneScreenshots/05-denominations.png) |
 
 ## Where the data comes from
 
@@ -148,10 +167,44 @@ the Worker's origin gate rejects it — so the wrapper loads the real site and t
 like the web build. `public/connection.html` is the bundled fallback screen when the site cannot be
 reached. The `dist/` snapshot is still packaged, so the icon, splash and fallback work offline.
 
-The committed APK is debug-signed with the standard Android debug key: fine for sideloading
-(`adb install artifacts/church-radar-1.0-debug.apk`, or copy it to the phone and allow install from
-unknown sources), not for Play. For a store build, create a keystore and run `bundleRelease` in
-Android Studio.
+### Signing
+
+Release builds are signed with `android/church-radar-release.jks`, unlocked by `android/keystore.properties`.
+Both files are git-ignored and **must be backed up**: Android only installs an update over an existing
+app when the signature matches, so losing this key means every future version has to be a fresh install
+on a new package name.
+
+- Key alias `churchradar`, RSA 4096, valid 30 years, certificate
+  `E6:59:2A:DD:6F:2B:EE:FD:0B:ED:FF:22:B8:ED:8C:72:56:B1:53:C9:74:46:1A:8E:88:B4:AB:6C:F5:B9:E8:45`.
+- To let GitHub Actions sign releases, add the key and its passwords as repository secrets — see the
+  header of `.github/workflows/release-apk.yml`:
+  `base64 -w0 android/church-radar-release.jks` → `ANDROID_KEYSTORE_BASE64`, plus
+  `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and `ANDROID_KEY_PASSWORD`.
+- Without `keystore.properties` the release build falls back to the debug key, so a fresh clone still
+  builds; never publish an APK built that way.
+
+### Publish a release
+
+Bumping the version and pushing a tag is the whole release — the workflow builds the signed APK,
+checksums it and attaches it to the tag, which is exactly where Orion Store looks.
+
+1. Set `versionCode` and `versionName` in `android/app/build.gradle`.
+2. Add `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt` and update
+   [`CHANGELOG.md`](CHANGELOG.md).
+3. `git tag v1.0.0 && git push origin v1.0.0`.
+
+To publish by hand instead:
+
+```bash
+npm run android:release     # android/app/build/outputs/apk/release/app-release.apk
+cp android/app/build/outputs/apk/release/app-release.apk artifacts/ChurchRadar-1.0.0.apk
+sha256sum artifacts/ChurchRadar-1.0.0.apk > artifacts/ChurchRadar-1.0.0.apk.sha256
+```
+
+Then attach the APK and its `.sha256` to a GitHub release tagged `v1.0.0`, and submit the repository in
+Orion Store (`store/orion-entry.json`; `releaseKeyword: "apk"` tells Orion which asset to serve). The
+store icon, screenshots and copy live in `fastlane/metadata/android/en-US/` — regenerate the shots with
+`npm run store:shots` after a visual change.
 
 ## Deploy
 
@@ -184,9 +237,13 @@ worker/
   index.js                check-in API + static asset worker (D1, realtime fan-out)
   wrangler.jsonc          local workerd config for the above
 freebuff-realtime/        platform room hub helper for local development
-scripts/                  asset generation + end-to-end verification scripts
-public/                   manifest, service worker, icons, style, seed data
+android/                  Capacitor native shell (app id app.churchradar.mobile)
+fastlane/                 store listing: title, descriptions, icon, screenshots, changelogs
+store/orion-entry.json    Orion Store catalogue entry
+scripts/                  asset generation, APK icons, store screenshots, end-to-end verification
+public/                   manifest, service worker, icons, style, seed data, offline fallback
 deploy.json               Sites manifest: assets + Worker + realtime
+.github/workflows/        release-apk: tag → signed APK attached to the release
 ```
 
 ## Known limits

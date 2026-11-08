@@ -1,0 +1,80 @@
+name: Release APK
+
+# Orion Store and every APK download resolve from GitHub releases, so pushing a
+# tag is the whole release: this builds the signed APK, checksums it, and
+# attaches both to the release for that tag.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   ANDROID_KEYSTORE_BASE64    base64 -w0 android/church-radar-release.jks
+#   ANDROID_KEYSTORE_PASSWORD  store password
+#   ANDROID_KEY_ALIAS          key alias (churchradar)
+#   ANDROID_KEY_PASSWORD       key password
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the web app and sync the native project
+        run: npm run build && npx cap sync android
+
+      - name: Write the signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 is not set. Add the release keystore and its passwords as repository secrets."
+            exit 1
+          fi
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > android/release.jks
+          {
+            echo "storeFile=../release.jks"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "storePassword=$KEYSTORE_PASSWORD"
+            echo "keyPassword=$KEY_PASSWORD"
+          } > android/keystore.properties
+
+      - name: Build the release APK
+        run: cd android && ./gradlew assembleRelease --no-daemon --console=plain
+
+      - name: Name and checksum the APK
+        run: |
+          VERSION=$(grep -oP 'versionName "\K[^"]+' android/app/build.gradle)
+          cp android/app/build/outputs/apk/release/app-release.apk "ChurchRadar-$VERSION.apk"
+          sha256sum "ChurchRadar-$VERSION.apk" > "ChurchRadar-$VERSION.apk.sha256"
+          cat "ChurchRadar-$VERSION.apk.sha256"
+
+      - name: Attach to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ChurchRadar-*.apk
+            ChurchRadar-*.apk.sha256
+          generate_release_notes: true

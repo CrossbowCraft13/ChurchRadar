@@ -1,10 +1,23 @@
 node_modules/
 dist/
 .vite/
-android/
 ios/
 *.local
 .DS_Store
 
 .verify/
 artifacts/
+
+# Android release signing material — never commit these.
+android/keystore.properties
+android/*.jks
+android/*.keystore
+
+# Android build output (the native project itself is tracked)
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json

@@ -1,0 +1,8 @@
+First release.
+
+• 56,946 churches worldwide from open data, dense enough to read a country at a glance
+• Green = meeting now, blue = already met today, red = not meeting yet
+• Community check-ins reach every open radar in under a tenth of a second
+• Denomination view and filters
+• Zoom past street level to scan OpenStreetMap for every church nearby
+• No account, no ads, no tracking
